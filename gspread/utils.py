@@ -52,6 +52,8 @@ def numericise(value, empty2zero=False):
         - Integer if input can be converted to integer
         - Zero if the input string is empty and empty2zero flag is set
         - The same input string, empty or not, otherwise.
+        
+    `None` is treated as an empty string.
 
     Executable examples:
 
@@ -68,8 +70,15 @@ def numericise(value, empty2zero=False):
     >>> numericise("")
     ''
     >>> numericise(None)
+    ''
+    >>> numericise(None, empty2zero=True)
+    0
+    >>> numericise(None, empty2zero=False)
+    ''
     >>>
     """
+    if value is None:
+        value = ''
     if value is not None:
         try:
             value = int(value)
