@@ -60,6 +60,17 @@ class Client(object):
     def _add_xml_header(self, data):
         return "<?xml version='1.0' encoding='UTF-8'?>%s" % data.decode()
 
+    def set_token(self, token):
+        """
+        Save the token for authorization.
+        
+        If you have already logged in and saved the token,
+        you can use this to set it without logging in again.
+        """
+        auth_header = "GoogleLogin auth=%s" % token
+        self.session.add_header('Authorization', auth_header)
+        self.token = token
+
     def login(self):
         """Authorize client using ClientLogin protocol.
 
@@ -86,6 +97,7 @@ class Client(object):
             r = self.session.post(url, data)
             content = r.read().decode()
             token = self._get_auth_token(content)
+            self.token = token
             auth_header = "GoogleLogin auth=%s" % token
             self.session.add_header('Authorization', auth_header)
 
@@ -281,4 +293,9 @@ def login(email, password):
     """
     client = Client(auth=(email, password))
     client.login()
+    return client
+
+def login_with_token(token):
+    client = Client(auth=())
+    client.set_token(token)
     return client
