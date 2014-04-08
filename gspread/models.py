@@ -431,6 +431,29 @@ class Worksheet(object):
                                           'inputValue': unicode(cell.value)})
         return feed
 
+    def set_cells(self, list_of_tuples):
+        """Updates a batch of cells.
+        
+        :param list_of_tuples: List of (row, col, value) tuples to set.
+        
+        It's like doing :
+        
+        for row, col, value in list_of_tuples:
+            update_cell(row, col, val)
+        
+        ...except it does it in a batch.
+        """
+        cells_list = self._fetch_cells()
+        update_list = []
+        for row, col, val in list_of_tuples:
+            for cell in cells_list:
+                if (cell.row == row) and (cell.col == col):
+                    cell.value = val
+                    update_list.append(cell)
+                    break
+        self.update_cells(update_list)
+            
+
     def update_cells(self, cell_list):
         """Updates cells in batch.
 
